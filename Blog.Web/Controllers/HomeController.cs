@@ -18,7 +18,7 @@ namespace Blog.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var articles = await _articleService.GetAllArticleAsync();
+            var articles = await _articleService.GetAllArticleWithNonDeletedAsync();
             return View(articles);
         }
 

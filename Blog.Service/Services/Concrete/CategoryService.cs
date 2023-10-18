@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Data.UnitOfWorks;
-using Blog.Entity.DTOs.Articles;
+using Blog.Entity.DTOs.Categories;
 using Blog.Entity.Entities;
 using Blog.Service.Services.Abstractions;
 using System;
@@ -11,22 +11,23 @@ using System.Threading.Tasks;
 
 namespace Blog.Service.Services.Concrete
 {
-    public class ArticleService : IArticleService
+    public class CategoryService : ICategoryService
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public ArticleService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task<List<ArticleDto>> GetAllArticleWithNonDeletedAsync()
-        {
-            var articles = await unitOfWork.GetRepository<Article>().GetAllAsync(x => !x.IsDeleted, x=>x.Category);
-            var map = mapper.Map<List<ArticleDto>>(articles);
-            return map;
 
+        public async Task<List<CategoryDto>> GetAllCategoriesNonDeleted()
+        {
+            var categories = await unitOfWork.GetRepository<Category>().GetAllAsync(x => !x.IsDeleted);
+            var map = mapper.Map<List<CategoryDto>>(categories);
+
+            return map;
         }
     }
 }

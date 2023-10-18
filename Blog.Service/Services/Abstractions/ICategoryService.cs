@@ -1,5 +1,4 @@
-﻿using Blog.Entity.DTOs.Articles;
-using Blog.Entity.Entities;
+﻿using Blog.Entity.DTOs.Categories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Blog.Service.Services.Abstractions
 {
-    public interface IArticleService
+    public interface ICategoryService
     {
-        Task<List<ArticleDto>> GetAllArticleWithNonDeletedAsync();
+        public Task<List<CategoryDto>> GetAllCategoriesNonDeleted();
     }
 }

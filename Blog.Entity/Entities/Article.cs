@@ -7,7 +7,7 @@ namespace Blog.Entity.Entities
         
         public string Title { get; set; }
         public string Content { get; set; }
-        public int WievCount { get; set; }
+        public int WievCount { get; set; } = 0;
         public Guid CategoryId { get; set; }
         public virtual Category Category { get; set; }
         public Guid? ImageId { get; set; }

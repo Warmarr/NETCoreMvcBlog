@@ -13,6 +13,9 @@
                 <form asp-controller="Article" asp-action="Add" method="post" onctype="multipart/form-data">
                     <div class="card-body">
                         <div class="form-group">
+                            <label for="defaultFormControlInput" class="form-label">Kategoriler</label>
+
+
                             <select id="categoryList" class="form-control" asp-for="CategoryId" asp-items="@(new SelectList(Model.Categories,"Id","Name"))"></select>
                             <span asp-validation-for="CategoryId" class="text-danger"></span>
                         </div> 

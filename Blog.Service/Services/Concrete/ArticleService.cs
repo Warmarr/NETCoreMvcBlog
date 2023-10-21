@@ -26,14 +26,8 @@ namespace Blog.Service.Services.Concrete
         public async Task CreateArticleAsync(ArticleAddDto articleAddDto)
         {
             var userId = Guid.Parse("CFD93DA1-4C4F-48C6-8E8E-CD9094A22E3A");
-            var article = new Article
-            {
-                Title = articleAddDto.Title,
-                Content = articleAddDto.Content,
-                CategoryId = articleAddDto.CategoryId,
-                UserId = userId,
-                
-            };
+            var imageId = Guid.Parse("F5083E18-2CB7-46F9-B7E0-89A11CACDCEA");
+            var article = new Article(articleAddDto.Title, articleAddDto.Content, userId, articleAddDto.CategoryId, imageId);
             await unitOfWork.GetRepository<Article>().AddAsync(article);
             await unitOfWork.SaveAsync();
 
@@ -61,6 +55,15 @@ namespace Blog.Service.Services.Concrete
             await unitOfWork.GetRepository<Article>().UpdateAsync(article);
             await unitOfWork.SaveAsync();
    
+        }
+        public async Task SafeDeleteArticleAsync(Guid articleId)
+        {
+            var article = await unitOfWork.GetRepository<Article>().GetByGuidAsync(articleId);
+            article.IsDeleted = true;
+            article.DeletedDate = DateTime.Now;
+
+            await unitOfWork.GetRepository<Article>().UpdateAsync(article);
+            await unitOfWork.SaveAsync();
         }
     }
 }

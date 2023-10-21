@@ -40,8 +40,11 @@
                             <td>@article.CreatedBy</td>
                             <td>@(article.IsDeleted ? "Pasif":"Aktif")</td>
                             <td>
-                                <a class="btn btn-outline-warning"  data-id="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="Update" asp-route-articleId="@article.Id">
+                                <a class="btn btn-outline-warning btn-sm"  data-id="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="Update" asp-route-articleId="@article.Id">
                                     <i class="bx bxs-edit"></i>
+                                </a>
+                                <a class="btn btn-outline-danger btn-sm" data-id="@article.Id" asp-area="Admin" asp-controller="Article" asp-action="Delete" asp-route-articleId="@article.Id">
+                                    <i class="bx bxs-minus-circle"></i>
                                 </a>
                             </td>
                         </tr>

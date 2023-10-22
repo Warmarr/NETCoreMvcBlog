@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Entity.DTOs.Articles;
 using Blog.Entity.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Blog.Service.AutoMapper.Articles
 {
@@ -17,8 +12,6 @@ namespace Blog.Service.AutoMapper.Articles
             CreateMap<ArticleAddDto,Article>().ReverseMap();
             CreateMap<ArticleUpdateDto,Article>().ReverseMap();
             CreateMap<ArticleUpdateDto, ArticleDto>().ReverseMap();
-
         }
-
     }
 }

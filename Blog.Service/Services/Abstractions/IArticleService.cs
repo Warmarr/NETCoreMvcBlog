@@ -12,8 +12,8 @@ namespace Blog.Service.Services.Abstractions
     {
         Task<List<ArticleDto>> GetAllArticleWithNonDeletedAsync();
         Task<ArticleDto> GetArticleWithCategoryNonDeletedAsync(Guid articleId);
-        Task UpdateArticleAsync(ArticleUpdateDto articleUpdateDto);
+        Task<string> UpdateArticleAsync(ArticleUpdateDto articleUpdateDto);
         Task CreateArticleAsync(ArticleAddDto articleAddDto);
-        Task SafeDeleteArticleAsync(Guid articleId);
+        Task<string> SafeDeleteArticleAsync(Guid articleId);
     }
 }

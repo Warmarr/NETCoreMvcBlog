@@ -2,21 +2,22 @@
 
 namespace Blog.Entity.Entities
 {
-    public class Article:EntityBase
+    public class Article : EntityBase
     {
-        public Article() 
+        public Article()
         {
 
         }
-        public Article(string title,string content,Guid userId,Guid categoryId,Guid imageId)
+        public Article(string title, string content, Guid userId, Guid categoryId, Guid imageId, string createdBy)
         {
             Title = title;
             Content = content;
             UserId = userId;
             CategoryId = categoryId;
             ImageId = imageId;
+            CreatedBy = createdBy;
         }
-        
+
         public string Title { get; set; }
         public string Content { get; set; }
         public int WievCount { get; set; } = 0;
@@ -25,7 +26,7 @@ namespace Blog.Entity.Entities
         public Guid? ImageId { get; set; }
         public virtual Image Image { get; set; }
 
-       
+
         public Guid UserId { get; set; }
         public AppUser User { get; set; }
     }

@@ -6,10 +6,11 @@ namespace Blog.Entity.Entities
     public class Image : EntityBase
     {
         public Image() { }
-        public Image(string filename, string type)
+        public Image(string filename, string type, string createdBy)
         {
             FileName = filename;
             Type = type;
+            CreatedBy = createdBy;
         }
         public Guid Id { get; set; }
         public string FileName { get; set; }

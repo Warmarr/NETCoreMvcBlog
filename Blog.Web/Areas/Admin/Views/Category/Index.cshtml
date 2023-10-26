@@ -37,10 +37,10 @@
                             <td>@category.CreatedBy</td>
                             <td>@(category.IsDeleted ? "Pasif" : "Aktif")</td>
                             <td>
-                                <a class="btn btn-outline-warning btn-sm" data-id="@category.Id" asp-area="Admin" asp-controller="Category" asp-action="Update" asp-route-articleId="@category.Id">
+                                <a class="btn btn-outline-warning btn-sm" data-id="@category.Id" asp-area="Admin" asp-controller="Category" asp-action="Update" asp-route-categoryId="@category.Id">
                                     <i class="bx bxs-edit"></i>
                                 </a>
-                                <a class="btn btn-outline-danger btn-sm" data-id="@category.Id" asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-articleId="@category.Id">
+                                <a class="btn btn-outline-danger btn-sm" data-id="@category.Id" asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-categoryId="@category.Id">
                                     <i class="bx bxs-minus-circle"></i>
                                 </a>
                             </td>

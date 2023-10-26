@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,11 @@ namespace Blog.Service.Services.Concrete
 
             return map;
         }
+        public async Task<Category> GetCategoryByGuid(Guid categoryId)
+        {
+            var category = await unitOfWork.GetRepository<Category>().GetByGuidAsync(categoryId);
+            return category;
+        }
         public async Task CreateCategoryAsync(CategoryAddDto categoryAddDto)
         {
             var user = _user.GetLoggedInUserId();
@@ -45,6 +51,34 @@ namespace Blog.Service.Services.Concrete
             await unitOfWork.GetRepository<Category>().AddAsync(category);
             await unitOfWork.SaveAsync();
 
+        }
+        public async Task<string> UpdateCategoryAsync(CategoryUpdateDto categoryUpdateDto)
+        {
+            var usermail = _user.GetLoggedInEmail();
+            var category = await unitOfWork.GetRepository<Category>().GetAsync(x => !x.IsDeleted && x.Id == categoryUpdateDto.Id);
+
+            category.Name = categoryUpdateDto.Name;
+            category.ModifiedBy = usermail;
+            category.ModifiedDate = DateTime.Now;
+
+            await unitOfWork.GetRepository<Category>().UpdateAsync(category);
+            await unitOfWork.SaveAsync();
+
+            return category.Name;
+        }
+        public async Task<string> SafeDeletCategoryAsync(Guid categoryId)
+        {
+            var usermail = _user.GetLoggedInEmail();
+            var category = await unitOfWork.GetRepository<Category>().GetByGuidAsync(categoryId);
+
+            category.IsDeleted = true;
+            category.DeletedBy = usermail;
+            category.DeletedDate = DateTime.Now;
+
+            await unitOfWork.GetRepository<Category>().UpdateAsync(category);
+            await unitOfWork.SaveAsync();
+
+            return category.Name;
         }
     }
 }

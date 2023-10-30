@@ -53,7 +53,7 @@ namespace Blog.Web.Areas.Admin.Controllers
             }
             else
             {
-                result.AddToModelState(this.ModelState);
+                result.AddToModelStates(this.ModelState);
                 return View();
 
             }
@@ -97,7 +97,7 @@ namespace Blog.Web.Areas.Admin.Controllers
                 return RedirectToAction("Index", "Category", new { Area = "Admin" });
                 
             }
-            result.AddToModelState(this.ModelState);
+            result.AddToModelStates(this.ModelState);
             return View();
         }
         public async Task<IActionResult> Delete(Guid categoryId)

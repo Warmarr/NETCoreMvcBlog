@@ -32,5 +32,20 @@
                 return $"{categoryName} başlıklı kategori başarıyla silinmiştir!";
             }
         }
+        public static class User
+        {
+            public static string Add(string userName)
+            {
+                return $"{userName} başlıklı kullanıcı başarıyla eklenmiştir!";
+            }
+            public static string Update(string userName)
+            {
+                return $"{userName} başlıklı kullanıcı başarıyla güncellenmiştir!";
+            }
+            public static string SafeDelete(string userName)
+            {
+                return $"{userName} başlıklı kullanıcı başarıyla silinmiştir!";
+            }
+        }
     }
 }

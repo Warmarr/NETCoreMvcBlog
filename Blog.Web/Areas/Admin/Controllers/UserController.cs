@@ -6,6 +6,7 @@ using Blog.Entity.Entities;
 using Blog.Entity.Enums;
 using Blog.Service.Extensions;
 using Blog.Service.Helpers.Images;
+using Blog.Service.Services.Abstractions;
 using Blog.Web.ResultMessages;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -21,6 +22,7 @@ namespace Blog.Web.Areas.Admin.Controllers
     public class UserController : Controller
     {
         private readonly UserManager<AppUser> userManager;
+        private readonly IUserService userService;
         private readonly SignInManager<AppUser> signInManager;
         private readonly RoleManager<AppRole> roleManager;
         private readonly IMapper mapper;
@@ -29,9 +31,10 @@ namespace Blog.Web.Areas.Admin.Controllers
         private readonly IImageHelper ımageHelper;
         private readonly IUnitOfWork unitOfWork;
 
-        public UserController(UserManager<AppUser> userManager,SignInManager<AppUser> signInManager ,RoleManager<AppRole> roleManager, IMapper mapper, IToastNotification toast, IValidator<AppUser> validator, IImageHelper ımageHelper, IUnitOfWork unitOfWork)
+        public UserController(UserManager<AppUser> userManager, IUserService userService, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IMapper mapper, IToastNotification toast, IValidator<AppUser> validator, IImageHelper ımageHelper, IUnitOfWork unitOfWork)
         {
             this.userManager = userManager;
+            this.userService = userService;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
             this.mapper = mapper;
@@ -43,23 +46,13 @@ namespace Blog.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var users = await userManager.Users.ToListAsync();
-            var map = mapper.Map<List<UserDto>>(users);
-
-            foreach (var item in map)
-            {
-                var findUser = await userManager.FindByIdAsync(item.Id.ToString());
-                var role = string.Join("", await userManager.GetRolesAsync(findUser));
-
-                item.Role = role;
-            }
-
-            return View(map);
+            var result = await userService.GetAllUsersWithRoleAsync();
+            return View(result);
         }
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var roles = await roleManager.Roles.ToListAsync();
+            var roles = await userService.GetAllRolesAsync();
             return View(new UserAddDto { Roles = roles });
         }
         [HttpPost]
@@ -67,23 +60,18 @@ namespace Blog.Web.Areas.Admin.Controllers
         {
             var map = mapper.Map<AppUser>(userAddDto);
             var validation = await validator.ValidateAsync(map);
-            var roles = await roleManager.Roles.ToListAsync();
+            var roles = await userService.GetAllRolesAsync();
 
             if (ModelState.IsValid)
             {
-                map.UserName = userAddDto.Email;
-                var result = await userManager.CreateAsync(map, string.IsNullOrEmpty(userAddDto.Password) ? "" : userAddDto.Password);
+                var result = await userService.CreateUserAsync(userAddDto);
                 if (result.Succeeded)
                 {
-                    var findRole = await roleManager.FindByIdAsync(userAddDto.RoleId.ToString());
-                    await userManager.AddToRoleAsync(map, findRole.ToString());
                     toast.AddSuccessToastMessage(Messages.User.Add(userAddDto.Email), new ToastrOptions { Title = "Başarılı" });
                     return RedirectToAction("Index", "User", new { Area = "Admin" });
                 }
                 else
                 {
-
-
                     result.AddToIdentityModelState(this.ModelState);
                     validation.AddToModelStates(ModelState);
                     return View(new UserAddDto { Roles = roles });
@@ -96,9 +84,9 @@ namespace Blog.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(Guid userId)
         {
-            var user = await userManager.FindByIdAsync(userId.ToString());
+            var user = await userService.GetAppUserByIdAsync(userId);
 
-            var roles = await roleManager.Roles.ToListAsync();
+            var roles = await userService.GetAllRolesAsync();
 
             var map = mapper.Map<UserUpdateDto>(user);
             map.Roles = roles;
@@ -108,11 +96,10 @@ namespace Blog.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(UserUpdateDto userUpdateDto)
         {
-            var user = await userManager.FindByIdAsync(userUpdateDto.Id.ToString());
+            var user = await userService.GetAppUserByIdAsync(userUpdateDto.Id);
             if (user != null)
             {
-                var userRole = string.Join("", await userManager.GetRolesAsync(user));
-                var roles = await roleManager.Roles.ToListAsync();
+                var roles = await userService.GetAllRolesAsync();
                 if (ModelState.IsValid)
                 {
                     var map = mapper.Map(userUpdateDto, user);
@@ -121,12 +108,9 @@ namespace Blog.Web.Areas.Admin.Controllers
                     {
                         user.UserName = userUpdateDto.Email;
                         user.SecurityStamp = Guid.NewGuid().ToString();
-                        var result = await userManager.UpdateAsync(user);
+                        var result = await userService.UpdateUserAsync(userUpdateDto);
                         if (result.Succeeded)
                         {
-                            await userManager.RemoveFromRoleAsync(user, userRole);
-                            var findRole = await roleManager.FindByIdAsync(userUpdateDto.RoleId.ToString());
-                            await userManager.AddToRoleAsync(user, findRole.Name);
                             toast.AddSuccessToastMessage(Messages.User.Update(userUpdateDto.Email), new ToastrOptions { Title = "Başarılı" });
                             return RedirectToAction("Index", "User", new { Area = "Admin" });
                         }
@@ -153,22 +137,20 @@ namespace Blog.Web.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Delete(Guid userId)
         {
-            var user = await userManager.FindByIdAsync(userId.ToString());
-            if (user != null)
+            var result = await userService.DeleteUserAsync(userId);
+            if (result.identityresult.Succeeded)
             {
-                var result = await userManager.DeleteAsync(user);
-                if (result.Succeeded)
+                toast.AddSuccessToastMessage(Messages.User.SafeDelete(result.email), new ToastrOptions { Title = "Başarılı" });
+                return RedirectToAction("Index","User", new {Area = "Admin"});
+            }
+            else
+            {
+                foreach (var error in result.identityresult.Errors)
                 {
-                    toast.AddSuccessToastMessage(Messages.User.SafeDelete(user.Email), new ToastrOptions { Title = "Başarılı" });
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
+                    ModelState.AddModelError("", error.Description);
                 }
             }
+
             return NotFound();
 
         }
@@ -176,7 +158,7 @@ namespace Blog.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Profile()
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
-            var getImage = await unitOfWork.GetRepository<AppUser>().GetAsync(x=>x.Id == user.Id,x=>x.Image);
+            var getImage = await unitOfWork.GetRepository<AppUser>().GetAsync(x => x.Id == user.Id, x => x.Image);
             var map = mapper.Map<UserProfileDto>(user);
             map.Image.FileName = getImage.Image.FileName;
             return View(map);
@@ -188,10 +170,10 @@ namespace Blog.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var IsVerifed = await userManager.CheckPasswordAsync(user, userProfileDto.CurrentPassword);
-                if(IsVerifed && userProfileDto.NewPassword != null && userProfileDto.Photo != null)
+                if (IsVerifed && userProfileDto.NewPassword != null && userProfileDto.Photo != null)
                 {
-                    var result = await userManager.ChangePasswordAsync(user,userProfileDto.CurrentPassword,userProfileDto.NewPassword);
-                    if(result.Succeeded)
+                    var result = await userManager.ChangePasswordAsync(user, userProfileDto.CurrentPassword, userProfileDto.NewPassword);
+                    if (result.Succeeded)
                     {
                         await userManager.UpdateSecurityStampAsync(user);
                         await signInManager.SignOutAsync();
@@ -221,7 +203,7 @@ namespace Blog.Web.Areas.Admin.Controllers
                         return View();
                     }
                 }
-                else if(IsVerifed && userProfileDto.Photo != null)
+                else if (IsVerifed && userProfileDto.Photo != null)
                 {
                     await userManager.UpdateSecurityStampAsync(user);
                     user.FirstName = userProfileDto.FirstName;

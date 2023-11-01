@@ -49,7 +49,7 @@ namespace Blog.Data.Mappings
             builder.HasMany<AppUserRole>().WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
             var superadmin = new AppUser
             {
-                Id = Guid.Parse("CFD93DA1-4C4F-48C6-8E8E-CD9094A22E3A"),
+                Id = Guid.Parse("A29D886A-7604-484F-91A4-545124A68D36"),
                 UserName = "superadmin@gmail.com",
                 NormalizedUserName = "SUPERADMIN@GMAIL.COM",
                 Email = "superadmin@gmail.com",
@@ -67,7 +67,7 @@ namespace Blog.Data.Mappings
 
             var admin = new AppUser
             {
-                Id = Guid.Parse("238F4A04-8F30-4AE0-BD6C-D0140988C617"),
+                Id = Guid.Parse("12D5774B-1DB0-4711-BD60-DDC1CF6B3F5F"),
                 UserName = "admin@gmail.com",
                 NormalizedUserName = "ADMIN@GMAIL.COM",
                 Email = "admin@gmail.com",

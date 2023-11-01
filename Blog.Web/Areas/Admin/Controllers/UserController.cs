@@ -128,9 +128,6 @@ namespace Blog.Web.Areas.Admin.Controllers
                         return View(new UserUpdateDto { Roles = roles });
 
                     }
-
-
-
                 }
             }
             return NotFound();
@@ -141,7 +138,7 @@ namespace Blog.Web.Areas.Admin.Controllers
             if (result.identityresult.Succeeded)
             {
                 toast.AddSuccessToastMessage(Messages.User.SafeDelete(result.email), new ToastrOptions { Title = "Başarılı" });
-                return RedirectToAction("Index","User", new {Area = "Admin"});
+                return RedirectToAction("Index", "User", new { Area = "Admin" });
             }
             else
             {
@@ -157,83 +154,31 @@ namespace Blog.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
-            var user = await userManager.GetUserAsync(HttpContext.User);
-            var getImage = await unitOfWork.GetRepository<AppUser>().GetAsync(x => x.Id == user.Id, x => x.Image);
-            var map = mapper.Map<UserProfileDto>(user);
-            map.Image.FileName = getImage.Image.FileName;
-            return View(map);
+            var profile = await userService.GetUserProfileAsync();
+            return View(profile);
         }
         [HttpPost]
         public async Task<IActionResult> Profile(UserProfileDto userProfileDto)
         {
-            var user = await userManager.GetUserAsync(HttpContext.User);
             if (ModelState.IsValid)
             {
-                var IsVerifed = await userManager.CheckPasswordAsync(user, userProfileDto.CurrentPassword);
-                if (IsVerifed && userProfileDto.NewPassword != null && userProfileDto.Photo != null)
+                var result = await userService.UserProfileUpdateAsync(userProfileDto);
+                if (result)
                 {
-                    var result = await userManager.ChangePasswordAsync(user, userProfileDto.CurrentPassword, userProfileDto.NewPassword);
-                    if (result.Succeeded)
-                    {
-                        await userManager.UpdateSecurityStampAsync(user);
-                        await signInManager.SignOutAsync();
-                        await signInManager.PasswordSignInAsync(user, userProfileDto.NewPassword, true, false);
-
-                        user.FirstName = userProfileDto.FirstName;
-                        user.LastName = userProfileDto.LastName;
-                        user.Email = userProfileDto.Email;
-                        user.PhoneNumber = userProfileDto.PhoneNumber;
-
-                        var imageUpload = await ımageHelper.Upload($"{userProfileDto.FirstName}{userProfileDto.LastName}", userProfileDto.Photo, ImageType.User);
-                        Image image = new(imageUpload.FullName, userProfileDto.Photo.ContentType, user.Email);
-                        await unitOfWork.GetRepository<Image>().AddAsync(image);
-
-                        user.ImageId = image.Id;
-
-                        await userManager.UpdateAsync(user);
-
-                        await unitOfWork.SaveAsync();
-
-                        toast.AddSuccessToastMessage("Şifreniz ve bilgileriniz başarıyla gerçekleşmiştir!");
-                        return View();
-                    }
-                    else
-                    {
-                        result.AddToIdentityModelState(ModelState);
-                        return View();
-                    }
-                }
-                else if (IsVerifed && userProfileDto.Photo != null)
-                {
-                    await userManager.UpdateSecurityStampAsync(user);
-                    user.FirstName = userProfileDto.FirstName;
-                    user.LastName = userProfileDto.LastName;
-                    user.Email = userProfileDto.Email;
-                    user.PhoneNumber = userProfileDto.PhoneNumber;
-
-                    var imageUpload = await ımageHelper.Upload($"{userProfileDto.FirstName}{userProfileDto.LastName}", userProfileDto.Photo, ImageType.User);
-                    Image image = new(imageUpload.FullName, userProfileDto.Photo.ContentType, user.Email);
-                    await unitOfWork.GetRepository<Image>().AddAsync(image);
-
-                    user.ImageId = image.Id;
-
-                    await userManager.UpdateAsync(user);
-
-                    await unitOfWork.SaveAsync();
-
-                    toast.AddSuccessToastMessage("Bilgileriniz başarıyla gerçekleşmiştir!");
-                    return View();
+                    toast.AddSuccessToastMessage("Profil güncelleme işlemi başarılı!", new ToastrOptions { Title = "Başarılı!" });
+                    return RedirectToAction("Index", "Home", new { Area = "Admin" });
                 }
                 else
                 {
-                    toast.AddErrorToastMessage("Bilgileriniz güncellenirken bir hata oluştu!");
-                    return View();
-
+                    var profile = await userService.GetUserProfileAsync();
+                    toast.AddErrorToastMessage("Profil güncelleme işlemi hata oluştu!", new ToastrOptions { Title = "Hata!" });
+                    return View(profile);
                 }
-
             }
-            return View();
-
+            else
+            {
+                return NotFound();
+            }
         }
 
     }

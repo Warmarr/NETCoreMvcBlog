@@ -4,6 +4,7 @@ using Blog.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231101224119_allow_imagenull")]
+    partial class allow_imagenull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,21 +56,21 @@ namespace Blog.Data.Migrations
                         new
                         {
                             Id = new Guid("fb8fd6ae-372c-47c8-8c82-ff7273136fc6"),
-                            ConcurrencyStamp = "8dcfcfb9-59a9-47ac-b2d9-e9c49b80bc35",
+                            ConcurrencyStamp = "d1f978cc-88fd-49c8-882d-05c2ab564525",
                             Name = "Superadmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
                             Id = new Guid("29724d8d-ef6a-4de5-99af-725084a1cb17"),
-                            ConcurrencyStamp = "31b2c115-405e-4d85-861d-58ae80438a97",
+                            ConcurrencyStamp = "cb34736b-4f31-40d4-9cb7-f1388e4390d5",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = new Guid("207c2ba5-1626-4680-9ad6-ca5b7c7482d5"),
-                            ConcurrencyStamp = "f69949e1-3068-4a39-8be8-07c2bdebc59a",
+                            ConcurrencyStamp = "fe291eef-11ce-4b6d-96f4-29ecdde61423",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -178,9 +181,9 @@ namespace Blog.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a29d886a-7604-484f-91a4-545124a68d36"),
+                            Id = new Guid("0f955fc7-0478-4525-ae29-dca173c1e36f"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eb555187-6825-4a78-b88f-b4cb543c4e9c",
+                            ConcurrencyStamp = "18f7e57e-6d89-434b-9232-3c8082289efd",
                             Email = "superadmin@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Kayra",
@@ -189,10 +192,10 @@ namespace Blog.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@GMAIL.COM",
                             NormalizedUserName = "SUPERADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPk6wdWePdBLsLEWD3xNVkA2OroeOZxQdgfjHY9bgJDS76GGx1dmT4ayvh0bqg++hw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELflMMJXJcL0Y8rG5MM4hpvd5XUKh3mdE14JZOHa57czIjs9h8nc/jA7E7aa81HaDA==",
                             PhoneNumber = "+905439999999",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "66adbcbe-a751-4bbc-afd4-37a21c946524",
+                            SecurityStamp = "6531da33-f432-4bb3-9972-70338ea40615",
                             TwoFactorEnabled = false,
                             UserName = "superadmin@gmail.com"
                         },
@@ -200,7 +203,7 @@ namespace Blog.Data.Migrations
                         {
                             Id = new Guid("12d5774b-1db0-4711-bd60-ddc1cf6b3f5f"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "25c65d90-7f90-4edd-8020-da3a80ce9bee",
+                            ConcurrencyStamp = "1ed0f84d-3184-40cb-af7c-92db8ca6c8c5",
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -209,10 +212,10 @@ namespace Blog.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAk1G796l5I94HsGH1I4bZPI+Fw4mdb6nlHpr0p2Ut02ywIqY/FqYvHFg9rMWllXaw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHNoPy97grS+kctrqP7+8ntMhuu9XLsTMmqfOF8QUshz2h98zjmqo4zk/q8dDcxNuQ==",
                             PhoneNumber = "+905439999988",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "52ccf935-de1b-4382-94c3-4f019cd2242d",
+                            SecurityStamp = "013585a3-fb1e-413d-9337-c01fe31e95f6",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         });
@@ -372,11 +375,11 @@ namespace Blog.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e36b4950-10fc-438a-8f9e-6749769e15f5"),
+                            Id = new Guid("6206590c-dd4a-45a8-b4d8-fbc6ce7bdd60"),
                             CategoryId = new Guid("fcfa880c-367e-46af-9388-025c90c6ac71"),
                             Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                             CreatedBy = "Admin",
-                            CreatedDate = new DateTime(2023, 11, 2, 1, 59, 41, 948, DateTimeKind.Local).AddTicks(1397),
+                            CreatedDate = new DateTime(2023, 11, 2, 1, 41, 19, 297, DateTimeKind.Local).AddTicks(6786),
                             ImageId = new Guid("eed85427-ca26-4cf3-8932-1fc664b72dfe"),
                             IsDeleted = false,
                             Title = "C# Windows Forms",
@@ -385,15 +388,15 @@ namespace Blog.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("37016c8c-78ba-4143-8a45-7483010ffbb4"),
+                            Id = new Guid("e415751d-3dc8-4ccc-9f93-cea59cb7f50c"),
                             CategoryId = new Guid("87881e74-d118-48e4-8e1e-f05441ed12c2"),
                             Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                             CreatedBy = "Admin",
-                            CreatedDate = new DateTime(2023, 11, 2, 1, 59, 41, 948, DateTimeKind.Local).AddTicks(1405),
+                            CreatedDate = new DateTime(2023, 11, 2, 1, 41, 19, 297, DateTimeKind.Local).AddTicks(6795),
                             ImageId = new Guid("f5083e18-2cb7-46f9-b7e0-89a11cacdcea"),
                             IsDeleted = false,
                             Title = "Asp.NET Deneme",
-                            UserId = new Guid("12d5774b-1db0-4711-bd60-ddc1cf6b3f5f"),
+                            UserId = new Guid("0f955fc7-0478-4525-ae29-dca173c1e36f"),
                             WievCount = 10
                         });
                 });
@@ -439,7 +442,7 @@ namespace Blog.Data.Migrations
                         {
                             Id = new Guid("87881e74-d118-48e4-8e1e-f05441ed12c2"),
                             CreatedBy = "Admin",
-                            CreatedDate = new DateTime(2023, 11, 2, 1, 59, 41, 948, DateTimeKind.Local).AddTicks(1605),
+                            CreatedDate = new DateTime(2023, 11, 2, 1, 41, 19, 297, DateTimeKind.Local).AddTicks(7005),
                             IsDeleted = false,
                             Name = "Asp.NET"
                         },
@@ -447,7 +450,7 @@ namespace Blog.Data.Migrations
                         {
                             Id = new Guid("fcfa880c-367e-46af-9388-025c90c6ac71"),
                             CreatedBy = "Admin",
-                            CreatedDate = new DateTime(2023, 11, 2, 1, 59, 41, 948, DateTimeKind.Local).AddTicks(1609),
+                            CreatedDate = new DateTime(2023, 11, 2, 1, 41, 19, 297, DateTimeKind.Local).AddTicks(7010),
                             IsDeleted = false,
                             Name = "C#"
                         });
@@ -498,7 +501,7 @@ namespace Blog.Data.Migrations
                         {
                             Id = new Guid("f5083e18-2cb7-46f9-b7e0-89a11cacdcea"),
                             CreatedBy = "Admin",
-                            CreatedDate = new DateTime(2023, 11, 2, 1, 59, 41, 948, DateTimeKind.Local).AddTicks(1716),
+                            CreatedDate = new DateTime(2023, 11, 2, 1, 41, 19, 297, DateTimeKind.Local).AddTicks(7124),
                             FileName = "images/testimage",
                             IsDeleted = false,
                             Type = "jpg"
@@ -507,7 +510,7 @@ namespace Blog.Data.Migrations
                         {
                             Id = new Guid("eed85427-ca26-4cf3-8932-1fc664b72dfe"),
                             CreatedBy = "Admin",
-                            CreatedDate = new DateTime(2023, 11, 2, 1, 59, 41, 948, DateTimeKind.Local).AddTicks(1721),
+                            CreatedDate = new DateTime(2023, 11, 2, 1, 41, 19, 297, DateTimeKind.Local).AddTicks(7129),
                             FileName = "images/.netimage",
                             IsDeleted = false,
                             Type = "png"

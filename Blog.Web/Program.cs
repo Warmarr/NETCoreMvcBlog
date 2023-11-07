@@ -7,12 +7,15 @@ using Blog.Entity.Entities;
 using Microsoft.AspNetCore.Identity;
 using NToastNotify;
 using Blog.Service.Describers;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.LoadDataLayerExtension(builder.Configuration);
 builder.Services.LoadServiceLayerExtension();
 builder.Services.AddSession();
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews()

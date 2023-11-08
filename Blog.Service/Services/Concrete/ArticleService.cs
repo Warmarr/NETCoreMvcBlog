@@ -35,11 +35,9 @@ namespace Blog.Service.Services.Concrete
                 ? await unitOfWork.GetRepository<Article>().GetAllAsync(a => !a.IsDeleted, a => a.Category, i => i.Image, u => u.User)
                 : await unitOfWork.GetRepository<Article>().GetAllAsync(a => a.CategoryId == categoryId && !a.IsDeleted,
                     a => a.Category, i => i.Image, u => u.User);
-
             var sortedArticles = isAscending
                 ? articles.OrderBy(a => a.CreatedDate).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList()
                 : articles.OrderByDescending(a => a.CreatedDate).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
-
             return new ArticleListDto
             {
                 Articles = sortedArticles,
@@ -48,8 +46,6 @@ namespace Blog.Service.Services.Concrete
                 PageSize = pageSize,
                 TotalCount = articles.Count,
                 IsAscending = isAscending
-
-
             };
         }
         public async Task CreateArticleAsync(ArticleAddDto articleAddDto)
@@ -77,7 +73,7 @@ namespace Blog.Service.Services.Concrete
         }
         public async Task<ArticleDto> GetArticleWithCategoryNonDeletedAsync(Guid articleId)
         {
-            var articles = await unitOfWork.GetRepository<Article>().GetAsync(x => !x.IsDeleted && x.Id == articleId, x => x.Category, i => i.Image);
+            var articles = await unitOfWork.GetRepository<Article>().GetAsync(x => !x.IsDeleted && x.Id == articleId, x => x.Category, i => i.Image,i=>i.User);
             var map = mapper.Map<ArticleDto>(articles);
             return map;
 
@@ -142,6 +138,27 @@ namespace Blog.Service.Services.Concrete
             await unitOfWork.SaveAsync();
 
             return articles.Title;
+        }
+
+        public async Task<ArticleListDto> SearchAsync(string keyword, int currentPage = 1, int pageSize = 3, bool isAscending = false)
+        {
+            pageSize = pageSize > 20 ? 20 : pageSize;
+            var articles = await unitOfWork.GetRepository<Article>().GetAllAsync(
+                a => !a.IsDeleted && (a.Title.Contains(keyword) || a.Content.Contains(keyword) || a.Category.Name.Contains(keyword)),
+                a => a.Category, i => i.Image, u => u.User);
+              
+            var sortedArticles = isAscending
+                ? articles.OrderBy(a => a.CreatedDate).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList()
+                : articles.OrderByDescending(a => a.CreatedDate).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+
+            return new ArticleListDto
+            {
+                Articles = sortedArticles,
+                CurrentPage = currentPage,
+                PageSize = pageSize,
+                TotalCount = articles.Count,
+                IsAscending = isAscending
+            };
         }
     }
 }

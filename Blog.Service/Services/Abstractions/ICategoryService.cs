@@ -13,7 +13,7 @@ namespace Blog.Service.Services.Abstractions
     {
         public Task<List<CategoryDto>> GetAllCategoriesNonDeleted();
         Task<List<CategoryDto>> GetAllCategegoriesWithDeletedAsync();
-
+        Task<List<CategoryDto>> GetAllCategoriesNonDeletedTake20();
         Task<Category> GetCategoryByGuid(Guid categoryId);
         public Task CreateCategoryAsync(CategoryAddDto categoryAddDto);
         Task<string> UpdateCategoryAsync(CategoryUpdateDto categoryUpdateDto);

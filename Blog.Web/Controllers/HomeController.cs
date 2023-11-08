@@ -15,11 +15,18 @@ namespace Blog.Web.Controllers
             _logger = logger;
             this._articleService = articleService;
         }
-
+        [HttpGet]
         public async Task<IActionResult> Index(Guid? categoryId, int currentPage = 1, int pageSize=3,
             bool isAscending=false)
         {
            var articles = await _articleService.GetAllByPaggingAsync(categoryId, currentPage, pageSize, isAscending);    
+            return View(articles);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Search(string keyword, int currentPage = 1, int pageSize = 3,
+            bool isAscending = false)
+        {
+            var articles = await _articleService.SearchAsync(keyword, currentPage, pageSize, isAscending);
             return View(articles);
         }
 
@@ -32,6 +39,17 @@ namespace Blog.Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        public async Task<IActionResult> Detail(Guid id)
+        {
+            var article = await _articleService.GetArticleWithCategoryNonDeletedAsync(id);
+            return View(article);   
+        }
+        public async Task<IActionResult> CategoryArticle(Guid? categoryId, int currentPage = 1, int pageSize = 3,
+            bool isAscending = false)
+        {
+            var article = await _articleService.GetAllByPaggingAsync(categoryId,currentPage,pageSize,isAscending);
+            return View(article);
         }
     }
 }

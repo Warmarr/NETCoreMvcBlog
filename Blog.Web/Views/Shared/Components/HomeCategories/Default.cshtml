@@ -1,0 +1,11 @@
+﻿@using Blog.Entity.DTOs.Categories
+@model List<CategoryDto>
+<div class="content">
+    <ul>
+        @foreach(var item in Model)
+        {
+            <li><a asp-controller="Home" asp-action="CategoryArticle" asp-route-categoryId="@item.Id">@item.Name</a></li>
+
+        }
+    </ul>
+</div>
